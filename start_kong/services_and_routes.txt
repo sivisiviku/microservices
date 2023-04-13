@@ -1,0 +1,44 @@
+### Services and Routes ###
+
+To add a new service, send a POST request to Kong Gateway’s Admin API /services route:
+curl -i -s -X POST http://localhost:8001/services \
+  --data name=service-one \
+  --data url='http://service-one:3000'
+
+curl -i -s -X POST http://localhost:8001/services \
+  --data name=service-two \
+  --data url='http://service-two:3001'
+
+curl -i -s -X POST http://localhost:8001/services \
+  --data name=service-three \
+  --data url='http://service-three:3002'
+
+Configure a new route to direct traffic:
+curl -i -X POST http://localhost:8001/services/service-one/routes \
+  --data 'paths[]=/service-one' \
+  --data name=service-one-route
+
+curl -i -X POST http://localhost:8001/services/service-two/routes \
+  --data 'paths[]=/service-two' \
+  --data name=service-two-route
+
+curl -i -X POST http://localhost:8001/services/service-three/routes \
+  --data 'paths[]=/service-three' \
+  --data name=service-three-route
+
+To view the current state of a service, make a GET request to the service URL
+curl -X GET http://localhost:8001/services/service-one
+
+You can list all current services by sending a GET request to the base /services URL
+curl -X GET http://localhost:8001/services
+
+To view the current state of a route, make a GET request to the route URL:
+curl -X GET http://localhost:8001/services/service-one/routes/service-one-route
+
+The Admin API also supports the listing of all routes currently configured:
+curl http://localhost:8001/routes
+
+To patch service:
+curl --request PATCH \
+  --url localhost:8001/services/service-one \
+  --data url='http://service-one:3000'
